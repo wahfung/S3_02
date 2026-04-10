@@ -1,39 +1,38 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
-import * as Cesium from 'cesium'
-import 'cesium/Build/Cesium/Widgets/widgets.css'
-import { useCesiumStore } from '@/stores/cesium'
+import { onMounted, onUnmounted, ref } from "vue";
+import * as Cesium from "cesium";
+import "cesium/Build/Cesium/Widgets/widgets.css";
+import { useCesiumStore } from "@/stores/cesium";
 
-const cesiumContainer = ref<HTMLDivElement | null>(null)
-const cesiumStore = useCesiumStore()
+const cesiumContainer = ref<HTMLDivElement | null>(null);
+const cesiumStore = useCesiumStore();
 
 onMounted(() => {
   if (cesiumContainer.value && !cesiumStore.isInitialized) {
-    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlYWE1ZWFhNi0wYjM3LTQxMjctYmYzNC00ZjI5NTUyMDBlMjMiLCJpZCI6NTYwODUsImlhdCI6MTY5NjA0MjE3OH0.MmK0RXva9E8Z7aW3F9X7v3z9z9z9z9z9z9z9z9z9z9z'
-
     const viewer = new Cesium.Viewer(cesiumContainer.value, {
-      terrain: Cesium.Terrain.fromWorldTerrain(),
       animation: false,
       timeline: false,
-      baseLayerPicker: true,
-      geocoder: true,
+      baseLayerPicker: false,
+      geocoder: false,
       homeButton: true,
       sceneModePicker: true,
       navigationHelpButton: true,
-    })
+      infoBox: true,
+      selectionIndicator: true,
+    });
 
     viewer.camera.flyTo({
       destination: Cesium.Cartesian3.fromDegrees(116.4074, 39.9042, 10000000),
       duration: 2,
-    })
+    });
 
-    cesiumStore.setViewer(viewer)
+    cesiumStore.setViewer(viewer);
   }
-})
+});
 
 onUnmounted(() => {
-  cesiumStore.destroyViewer()
-})
+  cesiumStore.destroyViewer();
+});
 </script>
 
 <template>
